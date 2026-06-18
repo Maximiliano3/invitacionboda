@@ -1,0 +1,61 @@
+<section class="galeria">
+  <h2>Nuestros momentos</h2>
+
+  <div class="grid">
+    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(0)" />
+    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(1)" />
+    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(2)" />
+    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(3)" />
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal">
+    <span class="close" onclick="closeModal()">×</span>
+
+    <img id="modal-img" />
+
+    <button class="prev" onclick="changeSlide(-1)">‹</button>
+    <button class="next" onclick="changeSlide(1)">›</button>
+  </div>
+</section>
+
+<script>
+  // @ts-ignore
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = [
+      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9",
+      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9",
+      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9",
+      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9"
+    ];
+
+    let currentIndex = 0;
+
+  const modal = document.getElementById("modal") as HTMLElement;
+  const modalImg = document.getElementById("modal-img") as HTMLImageElement; 
+
+    if (!modal || !modalImg) return;
+
+    // @ts-ignore
+    window.openModal = (index) => {
+      currentIndex = index;
+      modal.style.display = "flex";
+      modalImg.src = images[index];
+    };
+
+    // @ts-ignore
+    window.closeModal = () => {
+      modal.style.display = "none";
+    };
+
+    // @ts-ignore
+    window.changeSlide = (direction) => {
+      currentIndex += direction;
+
+      if (currentIndex < 0) currentIndex = images.length - 1;
+      if (currentIndex >= images.length) currentIndex = 0;
+
+      modalImg.src = images[currentIndex];
+    };
+  });
+</script>

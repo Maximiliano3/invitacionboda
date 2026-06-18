@@ -1,0 +1,40 @@
+---
+interface Props {
+  story: string;
+  brideParents: string[];
+  groomParents: string[];
+}
+
+const { story, brideParents, groomParents } = Astro.props;
+---
+
+<section class="section" id="mensaje">
+  <p class="guest-line">Para <span data-guest-name>Invitado especial</span></p>
+  <h2 class="section-title">Nos encantara compartir este momento contigo</h2>
+  <p class="body-copy">{story}</p>
+
+  <div class="blessing-card">
+    <p class="section-kicker">Con la bendicion de nuestros padres</p>
+
+    <div class="family-block">
+      <h3>De la novia</h3>
+      <p>{brideParents[0]}</p>
+      <p>{brideParents[1]}</p>
+    </div>
+
+    <div class="family-block">
+      <h3>Del novio</h3>
+      <p>{groomParents[0]}</p>
+      <p>{groomParents[1]}</p>
+    </div>
+  </div>
+
+  <div class="save-date-card">
+    <span class="save-date-card__label">Guarda la fecha</span>
+    <div class="save-date-card__grid">
+      <span>Sabado</span>
+      <strong>20</strong>
+      <span>Junio 2026</span>
+    </div>
+  </div>
+</section>

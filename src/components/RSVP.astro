@@ -1,0 +1,26 @@
+---
+interface Props {
+  confirmBefore: string;
+  confirmLink: string;
+}
+
+const { confirmBefore, confirmLink } = Astro.props;
+---
+
+<section class="section rsvp-panel">
+  <div class="photo-card photo-card--square">
+    <div class="photo-placeholder photo-placeholder--soft">
+      <span>Agrega aqui una foto secundaria</span>
+    </div>
+  </div>
+
+  <p class="section-script">Confirmar asistencia</p>
+  <p class="body-copy">
+    <span data-guest-name>Invitado especial</span>, sera un honor contar con tu presencia.
+    Agradecemos confirmar antes del <strong>{confirmBefore}</strong>.
+  </p>
+
+  <a class="button-primary button-primary--full" href={confirmLink} target="_blank" rel="noreferrer">
+    Confirmar asistencia
+  </a>
+</section>

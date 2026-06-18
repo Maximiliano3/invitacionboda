@@ -1,0 +1,76 @@
+---
+interface ScheduleItem {
+  time: string;
+  title: string;
+  detail: string;
+}
+
+interface Props {
+  ceremonyTime: string;
+  ceremonyPlace: string;
+  ceremonyAddress: string;
+  receptionTime: string;
+  receptionPlace: string;
+  receptionAddress: string;
+  dressCode: string;
+  dressNote: string;
+  mapLink: string;
+  schedule: ScheduleItem[];
+}
+
+const {
+  ceremonyTime,
+  ceremonyPlace,
+  ceremonyAddress,
+  receptionTime,
+  receptionPlace,
+  receptionAddress,
+  dressCode,
+  dressNote,
+  mapLink,
+  schedule,
+} = Astro.props;
+---
+
+<section class="section" id="detalles">
+  <p class="section-script">Detalles del evento</p>
+
+  <div class="info-card">
+    <p class="section-kicker">Ceremonia</p>
+    <h2 class="info-card__title">{ceremonyTime}</h2>
+    <p>{ceremonyPlace}</p>
+    <p class="muted-copy">{ceremonyAddress}</p>
+  </div>
+
+  <div class="info-card">
+    <p class="section-kicker">Recepcion</p>
+    <h2 class="info-card__title">{receptionTime}</h2>
+    <p>{receptionPlace}</p>
+    <p class="muted-copy">{receptionAddress}</p>
+    <a class="button-secondary" href={mapLink} target="_blank" rel="noreferrer">Ver ubicacion</a>
+  </div>
+
+  <div class="dress-card">
+    <p class="section-script">Dress Code</p>
+    <h3>{dressCode}</h3>
+    <p>{dressNote}</p>
+  </div>
+
+  <div class="timeline-card">
+    <p class="section-script">Itinerario</p>
+
+    <ol class="timeline">
+      {
+        schedule.map((item) => (
+          <li class="timeline__item">
+            <span class="timeline__time">{item.time}</span>
+            <div>
+              <strong>{item.title}</strong>
+              <p>{item.detail}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

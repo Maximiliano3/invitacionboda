@@ -1,0 +1,31 @@
+---
+interface Props {
+  couple: string;
+  dateLabel: string;
+  city: string;
+  ctaHref?: string;
+}
+
+const { couple, dateLabel, city, ctaHref = "#historia" } = Astro.props;
+---
+
+<section class="section hero-panel">
+  <p class="eyebrow">Invitacion de boda</p>
+  <h1 class="display-name">{couple}</h1>
+  <p class="hero-copy">
+    Una noche para celebrar el amor, la familia y todos los recuerdos que apenas comienzan.
+  </p>
+
+  <div class="photo-card photo-card--tall">
+    <div class="photo-placeholder">
+      <span>Agrega aqui su foto portada</span>
+    </div>
+  </div>
+
+  <div class="mini-note">
+    <span>{dateLabel}</span>
+    <span>{city}</span>
+  </div>
+
+  <a class="button-primary" href={ctaHref}>Ver invitacion</a>
+</section>

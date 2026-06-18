@@ -1,0 +1,44 @@
+---
+interface Props {
+  couple: string;
+  dateLabel: string;
+  reservedSeats?: number;
+}
+
+const { couple, dateLabel, reservedSeats = 2 } = Astro.props;
+---
+
+<section class="envelope-scene" data-envelope-scene aria-label="Portada de la invitacion">
+  <div class="envelope-botanical" aria-hidden="true">
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--left-1"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--left-2"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--left-3"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--center-1"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--center-2"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--right-1"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--right-2"></span>
+    <span class="envelope-botanical__leaf envelope-botanical__leaf--right-3"></span>
+  </div>
+
+  <div class="envelope-card">
+    <p class="envelope-eyebrow">Nuestra boda</p>
+    <h1 class="envelope-title">{couple}</h1>
+    <p class="envelope-date">{dateLabel}</p>
+
+    <button class="envelope" type="button" data-open-invitation aria-label="Abrir invitacion">
+      <span class="envelope__shadow"></span>
+      <span class="envelope__paper"></span>
+      <span class="envelope__fold envelope__fold--top"></span>
+      <span class="envelope__fold envelope__fold--bottom"></span>
+      <span class="envelope__wax"></span>
+    </button>
+
+    <p class="envelope-copy">Click para abrir la invitacion</p>
+
+    <div class="envelope-seats">
+      <p>Hemos reservado</p>
+      <span class="envelope-seats__count">{reservedSeats}</span>
+      <p>Lugares en su honor</p>
+    </div>
+  </div>
+</section>

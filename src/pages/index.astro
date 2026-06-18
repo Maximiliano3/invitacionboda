@@ -1,0 +1,157 @@
+---
+import Layout from "../layouts/Layout.astro";
+import EnvelopeIntro from "../components/EnvelopeIntro.astro";
+import Hero from "../components/Hero.astro";
+import Mensaje from "../components/Mensaje.astro";
+import Evento from "../components/Evento.astro";
+import Contador from "../components/Contador.astro";
+import RSVP from "../components/RSVP.astro";
+
+const schedule = [
+  { time: "5:30 PM", title: "Ceremonia civil", detail: "Jardin principal" },
+  { time: "6:00 PM", title: "Coctel", detail: "Brindis y fotos" },
+  { time: "7:00 PM", title: "Recepcion", detail: "Cena y brindis" },
+  { time: "9:00 PM", title: "Baile", detail: "Pista abierta" },
+  { time: "1:00 AM", title: "Despedida", detail: "Ultimo abrazo" },
+];
+
+const story =
+  "Despues de muchos recuerdos, aprendizajes y amor compartido, queremos celebrar con las personas que han sido parte de nuestra historia.";
+---
+
+<Layout title="Maxy & Denn | Nuestra boda">
+  <EnvelopeIntro
+    couple="Maxy & Denn"
+    dateLabel="20 de junio de 2026"
+    reservedSeats={2}
+  />
+
+  <div class="invitation-stage" data-invitation-stage>
+    <main class="invitation-shell">
+      <nav class="module-nav" aria-label="Secciones de la invitacion">
+        <a href="#inicio">Inicio</a>
+        <a href="#historia">Historia</a>
+        <a href="#evento">Evento</a>
+        <a href="#cuenta">Cuenta regresiva</a>
+        <a href="#rsvp">Confirmacion</a>
+      </nav>
+
+      <div class="invitation-flow">
+        <section class="module-shell module-shell--hero" id="inicio">
+          <div class="module-paper module-paper--hero">
+            <Hero
+              couple="Maxy & Denn"
+              dateLabel="Sabado 20 de junio de 2026"
+              city="Ciudad de Mexico"
+              ctaHref="#historia"
+            />
+          </div>
+        </section>
+
+        <section class="module-shell" id="historia">
+          <div class="module-heading">
+            <span>01</span>
+            <div>
+              <p>Nuestra historia</p>
+              <small>Un mensaje para quienes mas queremos</small>
+            </div>
+          </div>
+
+          <div class="module-paper">
+            <Mensaje
+              story={story}
+              brideParents={["Guadalupe Flores", "Ramon Ortega"]}
+              groomParents={["Patricia Ruiz", "Javier Maldonado"]}
+            />
+          </div>
+        </section>
+
+        <section class="module-shell" id="evento">
+          <div class="module-heading">
+            <span>02</span>
+            <div>
+              <p>Detalles del gran dia</p>
+              <small>Ceremonia, recepcion, dress code e itinerario</small>
+            </div>
+          </div>
+
+          <div class="module-paper module-paper--wide">
+            <Evento
+              ceremonyTime="5:30 PM"
+              ceremonyPlace="Jardin Los Encinos"
+              ceremonyAddress="Camino de las Flores 245, Estado de Mexico"
+              receptionTime="7:00 PM"
+              receptionPlace="Salon Benavento"
+              receptionAddress="Mismo recinto, acceso principal"
+              dressCode="Formal elegante"
+              dressNote="Evita el color blanco, ivory y tonos muy similares reservados para la novia."
+              mapLink="https://maps.google.com/?q=Jardin+Los+Encinos"
+              schedule={schedule}
+            />
+          </div>
+        </section>
+
+        <section class="module-shell" id="cuenta">
+          <div class="module-heading">
+            <span>03</span>
+            <div>
+              <p>Cuenta regresiva</p>
+              <small>Para ir sintiendo la emocion desde ahora</small>
+            </div>
+          </div>
+
+          <div class="module-paper module-paper--compact">
+            <Contador targetDate="2026-06-20T17:30:00-06:00" />
+          </div>
+        </section>
+
+        <section class="module-shell" id="rsvp">
+          <div class="module-heading">
+            <span>04</span>
+            <div>
+              <p>Confirma tu asistencia</p>
+              <small>Nos encantara celebrar contigo</small>
+            </div>
+          </div>
+
+          <div class="module-paper">
+            <RSVP
+              confirmBefore="10 de junio de 2026"
+              confirmLink="https://wa.me/5215555555555?text=Hola%2C%20confirmo%20mi%20asistencia%20a%20su%20boda"
+            />
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const params = new URLSearchParams(window.location.search);
+    const guestName = params.get("nombre")?.trim() || "Invitado especial";
+    const openButtons = document.querySelectorAll("[data-open-invitation]");
+
+    document.querySelectorAll("[data-guest-name]").forEach((element) => {
+      element.textContent = guestName;
+    });
+
+    const openInvitation = () => {
+      if (root.classList.contains("is-opened")) return;
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const revealDelay = prefersReducedMotion ? 80 : 1100;
+
+      window.scrollTo({ top: 0 });
+      root.classList.add("is-opening");
+
+      window.setTimeout(() => {
+        root.classList.remove("is-sealed", "is-opening");
+        root.classList.add("is-opened");
+      }, revealDelay);
+    };
+
+    openButtons.forEach((button) => {
+      button.addEventListener("click", openInvitation);
+    });
+  </script>
+</Layout>
