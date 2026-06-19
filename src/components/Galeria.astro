@@ -1,61 +1,122 @@
-<section class="galeria">
-  <h2>Nuestros momentos</h2>
+---
+interface GalleryImage {
+  src: string;
+  alt?: string;
+}
 
-  <div class="grid">
-    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(0)" />
-    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(1)" />
-    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(2)" />
-    <img src="https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9" onclick="openModal(3)" />
+interface Props {
+  images: GalleryImage[];
+  title?: string;
+}
+
+const { images, title = "Nuestros momentos" } = Astro.props;
+const serializedImages = JSON.stringify(images);
+---
+
+<section class="section gallery-section" data-gallery data-images={serializedImages}>
+  <p class="section-script">Nuestra galeria</p>
+  <h2 class="section-title section-title--small">{title}</h2>
+  <p class="body-copy gallery-copy">
+    Un vistazo a los recuerdos que nos trajeron hasta este gran dia.
+  </p>
+
+  <div class="gallery-grid">
+    {
+      images.map((image, index) => (
+        <button
+          class="gallery-thumb"
+          type="button"
+          data-gallery-thumb
+          data-index={index}
+          aria-label={`Abrir imagen ${index + 1}`}
+        >
+          <img src={image.src} alt={image.alt ?? `Recuerdo ${index + 1}`} loading="lazy" decoding="async" />
+        </button>
+      ))
+    }
   </div>
 
-  <!-- MODAL -->
-  <div id="modal" class="modal">
-    <span class="close" onclick="closeModal()">×</span>
-
-    <img id="modal-img" />
-
-    <button class="prev" onclick="changeSlide(-1)">‹</button>
-    <button class="next" onclick="changeSlide(1)">›</button>
+  <div class="gallery-modal" data-gallery-modal aria-hidden="true">
+    <button class="gallery-modal__backdrop" type="button" data-gallery-close aria-label="Cerrar galeria"></button>
+    <div class="gallery-modal__dialog" role="dialog" aria-modal="true" aria-label="Galeria de fotos">
+      <button class="gallery-modal__close" type="button" data-gallery-close aria-label="Cerrar galeria">
+        ×
+      </button>
+      <img class="gallery-modal__image" data-gallery-image alt="" />
+      <div class="gallery-modal__actions">
+        <button class="button-secondary" type="button" data-gallery-prev>
+          Anterior
+        </button>
+        <button class="button-secondary" type="button" data-gallery-next>
+          Siguiente
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
 <script>
-  // @ts-ignore
-  document.addEventListener("DOMContentLoaded", () => {
-    const images = [
-      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9",
-      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9",
-      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9",
-      "https://imgs.search.brave.com/n-TAVr5kuqWGwt2KiWLXTjIoNdvouHIT7Y_ftj7RPTE/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvOTM5/MjczMzY4L2VzL2Zv/dG8vYnJpZGUtYW5k/LWdyb29tLWhvbGRp/bmctdGhlaXItaGFu/ZHMtdG9nZXRoZXIu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PTBSVW5CNml1OS1L/LVU2QnR3X1NaS0R4/bnBZd1FMT0pDaFNR/dEpHN1hiT3M9"
-    ];
+  document.querySelectorAll("[data-gallery]").forEach((section) => {
+    const element = section;
+    const images = JSON.parse(element.getAttribute("data-images") || "[]");
+    const modal = element.querySelector("[data-gallery-modal]");
+    const modalImage = element.querySelector("[data-gallery-image]");
+    const thumbs = Array.from(element.querySelectorAll("[data-gallery-thumb]"));
+    const closeButtons = element.querySelectorAll("[data-gallery-close]");
+    const prevButton = element.querySelector("[data-gallery-prev]");
+    const nextButton = element.querySelector("[data-gallery-next]");
+
+    if (!modal || !modalImage || !prevButton || !nextButton || !images.length) return;
 
     let currentIndex = 0;
 
-  const modal = document.getElementById("modal") as HTMLElement;
-  const modalImg = document.getElementById("modal-img") as HTMLImageElement; 
+    const renderImage = () => {
+      const currentImage = images[currentIndex];
+      if (!currentImage) return;
 
-    if (!modal || !modalImg) return;
+      modalImage.setAttribute("src", currentImage.src);
+      modalImage.setAttribute("alt", currentImage.alt || `Recuerdo ${currentIndex + 1}`);
+    };
 
-    // @ts-ignore
-    window.openModal = (index) => {
+    const openModal = (index) => {
       currentIndex = index;
-      modal.style.display = "flex";
-      modalImg.src = images[index];
+      renderImage();
+      modal.classList.add("is-active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-gallery-open");
     };
 
-    // @ts-ignore
-    window.closeModal = () => {
-      modal.style.display = "none";
+    const closeModal = () => {
+      modal.classList.remove("is-active");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-gallery-open");
     };
 
-    // @ts-ignore
-    window.changeSlide = (direction) => {
-      currentIndex += direction;
-
-      if (currentIndex < 0) currentIndex = images.length - 1;
-      if (currentIndex >= images.length) currentIndex = 0;
-
-      modalImg.src = images[currentIndex];
+    const move = (direction) => {
+      currentIndex = (currentIndex + direction + images.length) % images.length;
+      renderImage();
     };
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener("click", () => {
+        const nextIndex = Number(thumb.getAttribute("data-index") || "0");
+        openModal(nextIndex);
+      });
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", closeModal);
+    });
+
+    prevButton.addEventListener("click", () => move(-1));
+    nextButton.addEventListener("click", () => move(1));
+
+    document.addEventListener("keydown", (event) => {
+      if (!modal.classList.contains("is-active")) return;
+
+      if (event.key === "Escape") closeModal();
+      if (event.key === "ArrowLeft") move(-1);
+      if (event.key === "ArrowRight") move(1);
+    });
   });
 </script>

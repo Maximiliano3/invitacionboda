@@ -5,7 +5,40 @@ import Hero from "../components/Hero.astro";
 import Mensaje from "../components/Mensaje.astro";
 import Evento from "../components/Evento.astro";
 import Contador from "../components/Contador.astro";
+import Galeria from "../components/Galeria.astro";
 import RSVP from "../components/RSVP.astro";
+
+const heroImageEntry = Object.values(
+  import.meta.glob("../assets/couple/hero.{avif,gif,jpeg,jpg,png,webp}", {
+    eager: true,
+    import: "default",
+  }),
+)[0];
+
+const secondaryImageEntry = Object.values(
+  import.meta.glob("../assets/couple/secondary.{avif,gif,jpeg,jpg,png,webp}", {
+    eager: true,
+    import: "default",
+  }),
+)[0];
+
+const galleryImageEntries = Object.entries(
+  import.meta.glob("../assets/gallery/*.{avif,gif,jpeg,jpg,png,webp}", {
+    eager: true,
+    import: "default",
+  }),
+).sort(([left], [right]) => left.localeCompare(right));
+
+const heroImage = heroImageEntry as string | undefined;
+const secondaryImage = secondaryImageEntry as string | undefined;
+const galleryImages = galleryImageEntries.map(([path, src], index) => {
+  const filename = path.split("/").pop()?.replace(/\.[^.]+$/, "") ?? `momento-${index + 1}`;
+
+  return {
+    src: src as string,
+    alt: `Foto ${index + 1}: ${filename.replace(/[-_]+/g, " ")}`,
+  };
+});
 
 const schedule = [
   { time: "5:30 PM", title: "Ceremonia civil", detail: "Jardin principal" },
@@ -33,6 +66,7 @@ const story =
         <a href="#historia">Historia</a>
         <a href="#evento">Evento</a>
         <a href="#cuenta">Cuenta regresiva</a>
+        {galleryImages.length > 0 && <a href="#galeria">Galeria</a>}
         <a href="#rsvp">Confirmacion</a>
       </nav>
 
@@ -44,6 +78,8 @@ const story =
               dateLabel="Sabado 20 de junio de 2026"
               city="Ciudad de Mexico"
               ctaHref="#historia"
+              imageSrc={heroImage}
+              imageAlt="Foto principal de Maxy y Denn"
             />
           </div>
         </section>
@@ -105,9 +141,27 @@ const story =
           </div>
         </section>
 
+        {
+          galleryImages.length > 0 && (
+            <section class="module-shell" id="galeria">
+              <div class="module-heading">
+                <span>04</span>
+                <div>
+                  <p>Galeria</p>
+                  <small>Recuerdos para compartir antes del gran dia</small>
+                </div>
+              </div>
+
+              <div class="module-paper module-paper--wide">
+                <Galeria images={galleryImages} />
+              </div>
+            </section>
+          )
+        }
+
         <section class="module-shell" id="rsvp">
           <div class="module-heading">
-            <span>04</span>
+            <span>{galleryImages.length > 0 ? "05" : "04"}</span>
             <div>
               <p>Confirma tu asistencia</p>
               <small>Nos encantara celebrar contigo</small>
@@ -118,6 +172,8 @@ const story =
             <RSVP
               confirmBefore="10 de junio de 2026"
               confirmLink="https://wa.me/5215555555555?text=Hola%2C%20confirmo%20mi%20asistencia%20a%20su%20boda"
+              imageSrc={secondaryImage}
+              imageAlt="Foto secundaria de Maxy y Denn"
             />
           </div>
         </section>
