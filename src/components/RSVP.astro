@@ -4,6 +4,7 @@ interface Props {
   confirmLink: string;
   imageSrc?: string;
   imageAlt?: string;
+  ticketCount?: number;
 }
 
 const {
@@ -11,10 +12,17 @@ const {
   confirmLink,
   imageSrc,
   imageAlt = "Foto de la pareja",
+  ticketCount = 2,
 } = Astro.props;
+
+const ticketImages = ["/images/cop_sin.png", "/images/taiga_sin.png"];
+const ticketBackSideImages = {
+  left: "/images/cop_dia.png",
+  right: "/images/taiga_dia.png",
+};
 ---
 
-<section class="section rsvp-panel">
+<section class="section rsvp-panel" data-rsvp-panel data-ticket-count={ticketCount}>
   <div class="photo-card photo-card--square">
     {
       imageSrc ? (
@@ -33,7 +41,187 @@ const {
     Agradecemos confirmar antes del <strong>{confirmBefore}</strong>.
   </p>
 
-  <a class="button-primary button-primary--full" href={confirmLink} target="_blank" rel="noreferrer">
+  <button
+    class="button-primary button-primary--full"
+    type="button"
+    data-rsvp-open
+    aria-haspopup="dialog"
+    aria-controls="rsvp-ticket-modal"
+  >
     Confirmar asistencia
-  </a>
+  </button>
+
+  <div class="rsvp-ticket-modal" data-rsvp-modal id="rsvp-ticket-modal" aria-hidden="true">
+    <button
+      class="rsvp-ticket-modal__backdrop"
+      type="button"
+      data-rsvp-close
+      aria-label="Cerrar boletos"
+    ></button>
+
+    <div class="rsvp-ticket-modal__dialog" role="dialog" aria-modal="true" aria-label="Boletos reservados">
+      <button class="rsvp-ticket-modal__close" type="button" data-rsvp-close aria-label="Cerrar boletos">
+        ×
+      </button>
+
+      <p class="rsvp-tickets__label">Tus boletos reservados</p>
+
+      <div class="rsvp-tickets__grid">
+        {
+          Array.from({ length: ticketCount }, (_, index) => (
+            <button
+              class="rsvp-ticket"
+              type="button"
+              data-rsvp-ticket
+              aria-pressed="false"
+              aria-label={`Girar boleto ${index + 1}`}
+            >
+              <span class="rsvp-ticket__flipper">
+                <span class="rsvp-ticket__face rsvp-ticket__face--front">
+                  <span class="rsvp-ticket__stub" aria-hidden="true">
+                    <span class="rsvp-ticket__kind">Admit One</span>
+                    <span class="rsvp-ticket__serial">{String(index + 1).padStart(2, "0")}</span>
+                  </span>
+
+                  <span class="rsvp-ticket__main">
+                    <span class="rsvp-ticket__copy">
+                      <span class="rsvp-ticket__number">Boleto {String(index + 1).padStart(2, "0")}</span>
+                      <span class="rsvp-ticket__event">Funcion especial</span>
+                      <strong class="rsvp-ticket__name" data-rsvp-ticket-name={index}>Invitado especial</strong>
+                      <span class="rsvp-ticket__meta">Acceso reservado</span>
+                    </span>
+                    {
+                      ticketImages[index] && (
+                        <span class="rsvp-ticket__image-wrap">
+                          <img
+                            class="rsvp-ticket__image"
+                            src={ticketImages[index]}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </span>
+                      )
+                    }
+                  </span>
+                </span>
+
+                <span class="rsvp-ticket__face rsvp-ticket__face--back">
+                  <span class="rsvp-ticket__qr-label">Escanea tu acceso</span>
+                  <span class="rsvp-ticket__qr-row">
+                    <img
+                      class="rsvp-ticket__qr-side-image rsvp-ticket__qr-side-image--left"
+                      src={ticketBackSideImages.left}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <img
+                      class="rsvp-ticket__qr"
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(`${confirmLink}|boleto-${index + 1}`)}`}
+                      alt={`QR del boleto ${index + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <img
+                      class="rsvp-ticket__qr-side-image rsvp-ticket__qr-side-image--right"
+                      src={ticketBackSideImages.right}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                  <strong class="rsvp-ticket__back-name" data-rsvp-ticket-back-name={index}>
+                    Invitado especial
+                  </strong>
+                  <span class="rsvp-ticket__back-note">Toca de nuevo para regresar</span>
+                </span>
+              </span>
+            </button>
+          ))
+        }
+      </div>
+
+      <a class="button-primary button-primary--full" href={confirmLink} target="_blank" rel="noreferrer">
+        Enviar confirmacion
+      </a>
+    </div>
+  </div>
 </section>
+
+<script>
+  document.querySelectorAll("[data-rsvp-panel]").forEach((panel) => {
+    const section = panel;
+    const openButton = section.querySelector("[data-rsvp-open]");
+    const modal = section.querySelector("[data-rsvp-modal]");
+    const closeButtons = Array.from(section.querySelectorAll("[data-rsvp-close]"));
+    const nameElements = Array.from(section.querySelectorAll("[data-rsvp-ticket-name]"));
+    const backNameElements = Array.from(section.querySelectorAll("[data-rsvp-ticket-back-name]"));
+    const ticketButtons = Array.from(section.querySelectorAll("[data-rsvp-ticket]"));
+
+    if (!(openButton instanceof HTMLButtonElement) || !(modal instanceof HTMLElement) || !nameElements.length) {
+      return;
+    }
+
+    const totalTickets = Math.max(
+      1,
+      Number.parseInt(section.getAttribute("data-ticket-count") || String(nameElements.length), 10) ||
+        nameElements.length,
+    );
+
+    const rawGuestName =
+      new URLSearchParams(window.location.search).get("nombre")?.trim() || "Invitado especial";
+
+    const parsedNames = rawGuestName
+      .split(/\s*(?:,|&|\+|\/|\by\b)\s*/i)
+      .map((name) => name.trim())
+      .filter(Boolean);
+
+    const guestNames = Array.from({ length: totalTickets }, (_, index) => {
+      if (parsedNames[index]) return parsedNames[index];
+      if (index === 0) return rawGuestName;
+      return index === 1 ? "Acompanante" : `Acompanante ${index}`;
+    });
+
+    nameElements.forEach((element, index) => {
+      element.textContent = guestNames[index] || `Invitado ${index + 1}`;
+    });
+
+    backNameElements.forEach((element, index) => {
+      element.textContent = guestNames[index] || `Invitado ${index + 1}`;
+    });
+
+    const closeModal = () => {
+      modal.classList.remove("is-active");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-ticket-open");
+      ticketButtons.forEach((ticket) => {
+        ticket.classList.remove("is-flipped");
+        ticket.setAttribute("aria-pressed", "false");
+      });
+    };
+
+    openButton.addEventListener("click", () => {
+      modal.classList.add("is-active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-ticket-open");
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", closeModal);
+    });
+
+    ticketButtons.forEach((ticket) => {
+      ticket.addEventListener("click", () => {
+        const isFlipped = ticket.classList.toggle("is-flipped");
+        ticket.setAttribute("aria-pressed", String(isFlipped));
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-active")) {
+        closeModal();
+      }
+    });
+  });
+</script>

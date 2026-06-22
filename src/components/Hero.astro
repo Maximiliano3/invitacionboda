@@ -4,8 +4,6 @@ interface Props {
   dateLabel: string;
   city: string;
   ctaHref?: string;
-  imageSrc?: string;
-  imageAlt?: string;
 }
 
 const {
@@ -13,29 +11,15 @@ const {
   dateLabel,
   city,
   ctaHref = "#historia",
-  imageSrc,
-  imageAlt = `Foto de ${couple}`,
 } = Astro.props;
 ---
 
-<section class="section hero-panel hero-panel--mist">
+<section class="section hero-panel">
   <p class="eyebrow">Invitacion de boda</p>
   <h1 class="display-name">{couple}</h1>
   <p class="hero-copy">
     Una noche para celebrar el amor, la familia y todos los recuerdos que apenas comienzan.
   </p>
-
-  <div class="photo-card photo-card--tall">
-    {
-      imageSrc ? (
-        <img class="photo-media" src={imageSrc} alt={imageAlt} loading="eager" decoding="async" />
-      ) : (
-        <div class="photo-placeholder">
-          <span>Agrega aqui su foto portada</span>
-        </div>
-      )
-    }
-  </div>
 
   <div class="mini-note">
     <span>{dateLabel}</span>

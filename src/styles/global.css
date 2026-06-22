@@ -906,6 +906,411 @@ html.is-opened .envelope-scene {
   text-align: center;
 }
 
+body.is-ticket-open {
+  overflow: hidden;
+}
+
+.rsvp-ticket-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s ease;
+}
+
+.rsvp-ticket-modal.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.rsvp-ticket-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(1, 28, 64, 0.78);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.rsvp-ticket-modal__dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  width: min(100%, 1180px);
+  max-height: min(88vh, 820px);
+  overflow: auto;
+  padding: 22px;
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 26%),
+    linear-gradient(135deg, rgba(227, 249, 252, 0.92), rgba(244, 252, 255, 0.98));
+  box-shadow: 0 28px 80px rgba(1, 28, 64, 0.26);
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rsvp-ticket-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(1, 28, 64, 0.82);
+  color: #f3fdff;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.rsvp-ticket-modal.is-active .rsvp-ticket-modal__backdrop {
+  opacity: 1;
+}
+
+.rsvp-ticket-modal.is-active .rsvp-ticket-modal__dialog {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.rsvp-tickets__label {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--accent-dark);
+}
+
+.rsvp-tickets__grid {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+.rsvp-ticket {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 210px;
+  max-width: 1080px;
+  justify-self: center;
+  padding: 0;
+  border-radius: 28px;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  perspective: 1400px;
+}
+
+.rsvp-ticket:focus-visible {
+  outline: 2px solid rgba(84, 172, 191, 0.9);
+  outline-offset: 4px;
+}
+
+.rsvp-ticket__flipper {
+  position: relative;
+  display: block;
+  min-height: 210px;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rsvp-ticket.is-flipped .rsvp-ticket__flipper {
+  transform: rotateY(180deg);
+}
+
+.rsvp-ticket__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 40px rgba(1, 28, 64, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+}
+
+.rsvp-ticket__face--front {
+  grid-template-columns: 164px minmax(0, 1fr);
+  align-items: stretch;
+  border: 1px solid rgba(2, 56, 89, 0.22);
+  background:
+    radial-gradient(circle at top right, rgba(167, 235, 242, 0.56), transparent 30%),
+    linear-gradient(135deg, rgba(244, 252, 255, 0.98), rgba(167, 235, 242, 0.86));
+}
+
+.rsvp-ticket__face--back {
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 24px 22px;
+  border: 1px solid rgba(2, 56, 89, 0.24);
+  background:
+    radial-gradient(circle at top, rgba(167, 235, 242, 0.68), transparent 42%),
+    linear-gradient(145deg, rgba(244, 252, 255, 0.98), rgba(84, 172, 191, 0.24));
+  transform: rotateY(180deg);
+}
+
+.rsvp-ticket__face--back::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(38, 101, 140, 0.16);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.rsvp-ticket__face--front::before,
+.rsvp-ticket__face--front::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(167, 235, 242, 0.95);
+  transform: translateY(-50%);
+  box-shadow: inset 0 0 0 1px rgba(2, 56, 89, 0.12);
+}
+
+.rsvp-ticket__face--front::before {
+  left: 152px;
+  transform: translate(-50%, -50%);
+}
+
+.rsvp-ticket__face--front::after {
+  right: -12px;
+}
+
+.rsvp-ticket__stub {
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 22px 16px;
+  border-right: 2px dashed rgba(2, 56, 89, 0.26);
+  background:
+    linear-gradient(180deg, rgba(84, 172, 191, 0.92), rgba(38, 101, 140, 0.96));
+}
+
+.rsvp-ticket__stub::before,
+.rsvp-ticket__stub::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(167, 235, 242, 0.95);
+  transform: translateX(-50%);
+  box-shadow: inset 0 0 0 1px rgba(2, 56, 89, 0.12);
+}
+
+.rsvp-ticket__stub::before {
+  top: -12px;
+}
+
+.rsvp-ticket__stub::after {
+  bottom: -12px;
+}
+
+.rsvp-ticket__kind,
+.rsvp-ticket__serial {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  text-transform: uppercase;
+  color: #f3fdff;
+}
+
+.rsvp-ticket__kind {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.16em;
+  font-size: 0.82rem;
+}
+
+.rsvp-ticket__serial {
+  letter-spacing: 0.22em;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.rsvp-ticket__main {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: stretch;
+  align-items: center;
+  column-gap: 28px;
+  padding: 24px 32px;
+  text-align: left;
+}
+
+.rsvp-ticket__copy {
+  display: grid;
+  align-content: center;
+  align-items: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rsvp-ticket__image-wrap {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  min-width: 168px;
+  padding: 10px 8px 10px 0;
+}
+
+.rsvp-ticket__main::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(38, 101, 140, 0.16);
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.rsvp-ticket__number {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  color: #26658c;
+}
+
+.rsvp-ticket__event {
+  font-family: "Great Vibes", cursive;
+  font-size: 1.72rem;
+  line-height: 0.95;
+  color: #54acbf;
+}
+
+.rsvp-ticket__image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 144px;
+  object-fit: contain;
+  align-self: center;
+  justify-self: end;
+  margin: 0;
+  filter: drop-shadow(0 10px 20px rgba(1, 28, 64, 0.16));
+}
+
+.rsvp-ticket__name {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 3.2vw, 2rem);
+  line-height: 0.95;
+  color: #011c40;
+  text-wrap: balance;
+}
+
+.rsvp-ticket__meta {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: rgba(2, 56, 89, 0.82);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rsvp-ticket__qr-label {
+  position: relative;
+  z-index: 1;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  color: #26658c;
+}
+
+.rsvp-ticket__qr-row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: min(100%, 460px);
+  margin: 0 auto;
+  padding-inline: 108px;
+}
+
+.rsvp-ticket__qr {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 132px);
+  border-radius: 18px;
+  background: #fff;
+  padding: 10px;
+  box-shadow:
+    0 16px 28px rgba(1, 28, 64, 0.12),
+    inset 0 0 0 1px rgba(2, 56, 89, 0.08);
+}
+
+.rsvp-ticket__qr-side-image {
+  position: absolute;
+  top: 50%;
+  display: block;
+  width: 104px;
+  max-width: 100%;
+  height: auto;
+  max-height: 132px;
+  object-fit: contain;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 8px 16px rgba(1, 28, 64, 0.14));
+}
+
+.rsvp-ticket__qr-side-image--left {
+  left: 0;
+}
+
+.rsvp-ticket__qr-side-image--right {
+  right: 0;
+}
+
+.rsvp-ticket__back-name {
+  position: relative;
+  z-index: 1;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  line-height: 1;
+  color: #011c40;
+  text-align: center;
+  max-width: 20ch;
+}
+
+.rsvp-ticket__back-note {
+  position: relative;
+  z-index: 1;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: rgba(2, 56, 89, 0.78);
+}
+
 body.is-gallery-open {
   overflow: hidden;
 }
@@ -1180,6 +1585,83 @@ body.is-gallery-open {
 
   .gallery-modal__actions {
     flex-direction: column;
+  }
+
+  .rsvp-ticket-modal {
+    padding: 14px;
+  }
+
+  .rsvp-ticket-modal__dialog {
+    padding: 18px 14px;
+    border-radius: 24px;
+  }
+
+  .rsvp-ticket {
+    min-height: 176px;
+  }
+
+  .rsvp-ticket__flipper {
+    min-height: 176px;
+  }
+
+  .rsvp-ticket__face--front {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .rsvp-ticket__face--front::before {
+    left: 80px;
+  }
+
+  .rsvp-ticket__main {
+    grid-template-columns: minmax(0, 1fr) 92px;
+    column-gap: 14px;
+    row-gap: 4px;
+    align-content: center;
+    padding: 18px 16px 18px 18px;
+  }
+
+  .rsvp-ticket__copy {
+    gap: 4px;
+  }
+
+  .rsvp-ticket__image-wrap {
+    min-width: 92px;
+    padding: 0;
+    justify-content: center;
+    align-self: center;
+  }
+
+  .rsvp-ticket__event {
+    font-size: 1.28rem;
+  }
+
+  .rsvp-ticket__image {
+    width: auto;
+    max-width: 88px;
+    max-height: 82px;
+    justify-self: center;
+  }
+
+  .rsvp-ticket__name {
+    font-size: 1.18rem;
+  }
+
+  .rsvp-ticket__meta {
+    font-size: 0.66rem;
+  }
+
+  .rsvp-ticket__qr {
+    width: min(100%, 116px);
+  }
+
+  .rsvp-ticket__qr-row {
+    width: min(100%, 320px);
+    padding-inline: 72px;
+  }
+
+  .rsvp-ticket__qr-side-image {
+    width: 74px;
+    max-height: 94px;
   }
 }
 
