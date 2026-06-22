@@ -392,6 +392,7 @@ html.is-opened .envelope-scene {
 
 .module-heading p {
   font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   font-size: 2rem;
   line-height: 1;
 }
@@ -399,6 +400,8 @@ html.is-opened .envelope-scene {
 .module-heading small {
   margin-top: 4px;
   color: rgba(200, 241, 246, 0.76);
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-size: 0.7rem;
@@ -466,6 +469,8 @@ html.is-opened .envelope-scene {
 .mini-note,
 .muted-copy,
 .countdown-note {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   color: var(--text-soft);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -488,6 +493,7 @@ html.is-opened .envelope-scene {
 .timeline__item strong {
   margin: 0;
   font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   font-weight: 600;
   line-height: 1;
 }
@@ -540,6 +546,8 @@ html.is-opened .envelope-scene {
 .timeline__item p,
 .rsvp-panel p {
   margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   line-height: 1.75;
   font-size: 0.98rem;
 }
@@ -694,6 +702,8 @@ html.is-opened .envelope-scene {
 
 .guest-line {
   margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.78rem;
@@ -726,12 +736,15 @@ html.is-opened .envelope-scene {
 .family-block h3 {
   margin: 0 0 4px;
   font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   font-size: 1.45rem;
   font-weight: 600;
 }
 
 .family-block p {
   margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
 }
 
 .save-date-card {
@@ -741,6 +754,8 @@ html.is-opened .envelope-scene {
 .save-date-card__label {
   display: inline-block;
   margin-bottom: 12px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -754,8 +769,14 @@ html.is-opened .envelope-scene {
 
 .save-date-card__grid strong {
   font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   font-size: 4rem;
   line-height: 0.9;
+}
+
+.save-date-card__grid span {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
 }
 
 #detalles {
@@ -825,6 +846,8 @@ html.is-opened .envelope-scene {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   color: var(--accent-dark);
   font-size: 0.82rem;
   letter-spacing: 0.08em;
@@ -860,11 +883,14 @@ html.is-opened .envelope-scene {
 .countdown-box span {
   display: block;
   font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   font-size: 2.6rem;
   line-height: 1;
 }
 
 .countdown-box small {
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
   color: var(--text-soft);
   text-transform: uppercase;
   letter-spacing: 0.1em;
